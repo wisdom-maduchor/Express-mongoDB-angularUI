@@ -1,7 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const Item = require('./models/Item');
+const User = require('./models/User');
 
 
 const app = express();
@@ -14,6 +18,72 @@ mongoose.connect('mongodb://127.0.0.1:27017/crudDB')
 app.use(cors());
 app.use(express.json());
 
+// USER SCHEMA
+// const userSchema = new mongoose.Schema({
+//   email: { type: String, required: true, unique: true },
+//   password: { type: String, required: true }
+// });
+
+// const User = mongoose.model('User', userSchema);
+
+// AUTHENTICATION 
+
+// AUTH MIDDLEWARE
+function auth(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Access denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'secret_key');
+    req.user = decoded;
+    next();
+  } catch {
+    res.status(400).json({ message: 'Invalid token' });
+  }
+}
+
+// REGISTER ROUTE
+app.post('/register', async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+  const user = new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: hashedPassword
+  });
+
+  await user.save();
+  res.status(201).json({ message: 'User registered' });
+});
+
+// LOGIN ROUTE
+app.post('/login', async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+
+  const isMatch = await bcrypt.compare(req.body.password, user.password);
+
+  if (!isMatch) {
+    return res.status(400).json({ message: 'Invalid password' });
+  }
+
+  const token = jwt.sign(
+    { userId: user._id },
+    'secret_key',
+    { expiresIn: '1h' }
+  );
+
+  res.json({ token });
+});
+
+
+// HTTP ROUTE
 // let items = [
 //     {
 //         id: '1',
@@ -52,7 +122,7 @@ app.use(express.json());
 
 
 // GET
-app.get('/items', async (req, res) => {
+app.get('/items', auth, async (req, res) => {
     const items = await Item.find();
     res.json(items);
 });
