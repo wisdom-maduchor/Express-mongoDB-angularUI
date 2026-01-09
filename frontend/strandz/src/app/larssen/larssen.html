@@ -1,0 +1,35 @@
+<form (ngSubmit)="createItem()" action="">
+    <label>Item</label>
+    <input type="text" name="item" [(ngModel)]="userItem.name"><br>
+
+    <label>Location</label>
+    <input type="text" name="location" [(ngModel)]="userItem.location"><br>
+
+    <label>Price</label>
+    <input type="text" name="price" [(ngModel)]="userItem.cost"><br>
+
+    <button (click)="createItem()">Create</button>
+</form>
+
+<br><br>
+
+<table>
+    <tr>
+        <th>S/N</th>
+        <th>Item</th>
+        <th>Location</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
+
+    <tr *ngFor="let item of items">
+        <td>{{item._id}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.location}}</td>
+        <td>{{item.cost}}</td>
+        <td>
+            <button (click)="updateItem(item._id, item.name)">edit</button>
+            <button (click)="deleteItem(item._id)">delete</button>
+        </td>
+    </tr>
+</table>
