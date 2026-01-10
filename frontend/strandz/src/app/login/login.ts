@@ -27,11 +27,16 @@ export class Login {
     }).subscribe({
       next: (res) => {
         this.authService.saveToken(res.token);
-        this.router.navigate(['/items']);
+        this.router.navigate(['/larssen']);
       },
       error: () => {
         this.error = 'invalid email or password';
       }
     });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/register']);
   }
 }

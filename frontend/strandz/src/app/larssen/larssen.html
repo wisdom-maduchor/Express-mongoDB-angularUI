@@ -1,3 +1,4 @@
+
 <form (ngSubmit)="createItem()" action="">
     <label>Item</label>
     <input type="text" name="item" [(ngModel)]="userItem.name"><br>
@@ -33,3 +34,5 @@
         </td>
     </tr>
 </table>
+
+<button (click)="logout()">Logout</button>

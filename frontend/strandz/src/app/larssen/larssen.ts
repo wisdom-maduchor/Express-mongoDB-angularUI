@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { LarssenService } from '../service/larssen-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../service/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-larssen',
@@ -19,7 +21,10 @@ export class Larssen implements OnInit {
   };
 
   private larssenService = inject(LarssenService);
-  // constructor(private larssenService: LarssenService){};
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ){};
 
   ngOnInit(): void {
     this.itemList();
@@ -48,4 +53,9 @@ export class Larssen implements OnInit {
       this.itemList();
     });
   };
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }
