@@ -22,7 +22,7 @@ export class Larssen implements OnInit {
 
   private larssenService = inject(LarssenService);
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ){};
 

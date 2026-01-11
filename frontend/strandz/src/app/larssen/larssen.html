@@ -30,7 +30,8 @@
         <td>{{item.cost}}</td>
         <td>
             <button (click)="updateItem(item._id, item.name)">edit</button>
-            <button (click)="deleteItem(item._id)">delete</button>
+            <!-- <button (click)="deleteItem(item._id)">delete</button> -->
+            <button *ngIf="authService.getUserRole()">delete</button>
         </td>
     </tr>
 </table>

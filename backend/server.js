@@ -74,7 +74,8 @@ app.post('/login', async (req, res) => {
   }
 
   const token = jwt.sign(
-    { userId: user._id },
+    // { userId: user._id }, // without role
+    { userId: user._id, role: 'admin' }, // with role(role-based)
     'secret_key',
     { expiresIn: '1h' }
   );
