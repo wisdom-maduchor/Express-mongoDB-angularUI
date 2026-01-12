@@ -8,10 +8,11 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   const token = authService.getToken();
 
-  if(token){
+  if(token && !authService.isTokenExpired()){
     return true;
   }
 
+  authService.logout();
   router.navigate(['/login']); // redirects here when it can't find the token
   return false;
 };
